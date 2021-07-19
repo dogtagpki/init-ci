@@ -1,5 +1,9 @@
 name: "Determine Fedora versions"
 description: "Determine the latest and previous versions of Fedora to run the CI against"
+inputs:
+  test-override:
+    description: 'Override matrix for testing'
+    required: true
 outputs:
   matrix: 
     description: "Fedora versions"
@@ -12,5 +16,11 @@ runs:
         export latest=$(cat /etc/fedora-release | awk '{ print $3 }')
         export previous=$(cat /etc/fedora-release | awk '{ print $3 - 1}')
         echo "Running CI against Fedora $previous and $latest"
+        if [ "${{ inputs.test-override }}" == "" ]
+        then
+          echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
+        else
+          echo "::set-output name=matrix::${{ secrets.MATRIX }}"
+        fi
         echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
       shell: bash
