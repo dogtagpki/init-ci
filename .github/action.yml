@@ -1,0 +1,16 @@
+name: "Determine Fedora versions"
+description: "Determine the latest and previous versions of Fedora to run the CI against"
+outputs:
+  matrix: 
+    description: "Fedora versions"
+    value: ${{ steps.set-matrix.outputs.matrix }}
+runs:
+  using: "composite"
+  steps:
+    - id: set-matrix
+      run: |
+        export latest=$(cat /etc/fedora-release | awk '{ print $3 }')
+        export previous=$(cat /etc/fedora-release | awk '{ print $3 - 1}')
+        echo "Running CI against Fedora $previous and $latest"
+        echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
+      shell: bash
