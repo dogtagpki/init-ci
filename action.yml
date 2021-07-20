@@ -11,12 +11,13 @@ runs:
       run: |
         export latest=$(cat /etc/fedora-release | awk '{ print $3 }')
         export previous=$(cat /etc/fedora-release | awk '{ print $3 - 1}')
-        if [ "${{ secrets.MATRIX }}" == "" ]
+        export test_matrix=$(cat $GITHUB_ACTION_PATH/test-matrix.json)
+        if [ "$test_matrix" == "" ]
         then
           echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
           echo "Running CI against Fedora $previous and $latest"
         else
-          echo "::set-output name=matrix::${{ secrets.MATRIX }}"
-          echo "Test matrix defined: ${{ secrets.MATRIX }}"
+          echo "::set-output name=matrix::\"$test_matrix\""
+          echo "Test matrix defined: $test_matrix"
         fi
       shell: bash
