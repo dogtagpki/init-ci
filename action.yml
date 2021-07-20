@@ -20,7 +20,7 @@ runs:
         then
           echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
         else
-          echo "::set-output name=matrix::${{ secrets.MATRIX }}"
+          echo "::set-output name=matrix::${{ inputs.test-override }}"
         fi
         echo "::set-output name=matrix::{\"os\":[\"$previous\", \"$latest\"]}"
       shell: bash
